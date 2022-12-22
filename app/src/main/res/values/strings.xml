@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Jet Trip</string>
+    <string name="home">Home</string>
+    <string name="favorite">Favorite</string>
+    <string name="profile">Profile</string>
+    <string name="search">Search</string>
+    <string name="welcome">Welcome to Lombok,</string>
+    <string name="destination">Explore your destination!</string>
+    <string name="overview">Overview</string>
+    <string name="empty_data">Empty Data</string>
+    <string name="empty_fav">Empty Favorite</string>
+    <string name="author">Ahmad Sufyan</string>
+    <string name="email">ahmadsufyan514@gmail.com</string>
+    <string name="quote">\"First, solve the problem. Then, write the code.\"</string>
+</resources>
