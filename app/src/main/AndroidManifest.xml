@@ -14,10 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JetTrip"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDXrQu2iETleZxceFSc4wquCvY5C0MuAfY" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.JetTrip">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

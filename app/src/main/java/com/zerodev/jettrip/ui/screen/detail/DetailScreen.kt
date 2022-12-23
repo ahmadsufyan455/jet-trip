@@ -3,6 +3,7 @@ package com.zerodev.jettrip.ui.screen.detail
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -16,12 +17,19 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.zerodev.jettrip.R
 import com.zerodev.jettrip.di.Injection
 import com.zerodev.jettrip.ui.ViewModelFactory
@@ -50,6 +58,8 @@ fun DetailScreen(
                     shortDesc = data.shortDesc,
                     longDesc = data.longDesc,
                     isFavorite = data.isFavorite,
+                    lat = data.lat,
+                    lon = data.lon,
                     onBackClick = navigateBack,
                     onFavoriteButtonClick = { id, isFavorite ->
                         viewModel.addToFavorite(id, isFavorite)
@@ -69,11 +79,17 @@ fun DetailContent(
     location: String,
     shortDesc: String,
     longDesc: String,
+    lat: Double,
+    lon: Double,
     isFavorite: Boolean,
     onBackClick: () -> Unit,
     onFavoriteButtonClick: (id: Long, isFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val latLng = LatLng(lat, lon)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(latLng, 10f)
+    }
     Column(
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
@@ -114,7 +130,7 @@ fun DetailContent(
             elevation = 4.dp
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
-                Row() {
+                Row {
                     Text(
                         text = name,
                         style = MaterialTheme.typography.h3,
@@ -150,6 +166,23 @@ fun DetailContent(
             textAlign = TextAlign.Justify,
             modifier = Modifier.padding(16.dp)
         )
+        Box(
+            modifier = Modifier
+                .height(250.dp)
+                .padding(16.dp)
+                .clip(RoundedCornerShape(16.dp))
+        ) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState
+            ) {
+                Marker(
+                    state = MarkerState(position = latLng),
+                    title = name,
+                    snippet = shortDesc
+                )
+            }
+        }
     }
 }
 
@@ -165,6 +198,8 @@ fun DetailContentPreview() {
             shortDesc = "Hiking, lake, mountain and camping",
             longDesc = "Plawangan Sembalun is the entrance to the top of Rinjani. This place is claimed to be one of the best spots for Mount Rinjani. The beauty of being here is beyond words. You can only be stunned and amazed.",
             isFavorite = false,
+            lat = 0.0,
+            lon = 0.0,
             onBackClick = { },
             onFavoriteButtonClick = { _, _ -> },
         )
